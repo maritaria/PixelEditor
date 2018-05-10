@@ -1,7 +1,7 @@
 local screen = {}
 
-function screen:init()
-    self.canvas = love.graphics.newCanvas(C.screenWidth, C.screenHeight)
+function screen:init(width, height)
+    self.canvas = love.graphics.newCanvas(width, height)
     self.canvas:setFilter("linear", "nearest")
     --will render the canvas at 0,0 stretched over the entire window
 	self.transform = love.math.newTransform(0.5, 0.5, 0, C.pixelSize)

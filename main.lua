@@ -16,7 +16,7 @@ local cursorStart = 30
 function love.load()
 	colorgrid:init(7, 7)
 	palette:init()
-    screen:init()
+    screen:init(C.screenWidth, C.screenHeight)
 	require("palettes.basic_rainbow")
 end
 
