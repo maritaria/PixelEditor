@@ -1,45 +1,57 @@
-local palette = {}
-
+local screen = require("screen")
 local colors = require("colors")
 local colorgrid = require("colorgrid")
 
-function palette:init(x, y)
-	self.x = 0
-	self.y = 0
-	self.positions = {
+local palette = screen:createClass()
+
+function palette:init(colorgrid)
+	screen.init(self, colorgrid.width, colorgrid.height)
+	self:setPos(0, C.canvasHeight + 1)
+	self.grid = colorgrid
+	self.cursors = {
 		primary = { x = 0, y = 0 },
 		secondary = { x = 0, y = 1 },
 	}
 end
 
-function palette:setPos(x, y, label)
-	local pos = self.positions[label]
+function palette:setCursorPos(x, y, label)
+	local pos = self.cursors[label]
 	pos.x = x
 	pos.y = y
 end
 
-function palette:getPos(label)
-	local pos = self.positions[label]
+function palette:getCursorPos(label)
+	local pos = self.cursors[label]
 	return pos.x, pos.y
 end
 
 function palette:getColor(label)
-	return colorgrid:getColor(self:getPos(label))
+	return self.grid:getColor(self:getCursorPos(label))
 end
 
-function palette:render(x, y)
-	love.graphics.push()
-	love.graphics.translate(x, y)
-
-	for x = 0, colorgrid.width - 1 do
-		for y = 0, colorgrid.height - 1 do
-			local color = colorgrid:getColor(x, y)
-			love.graphics.setColor(color)
-			love.graphics.points({ x, y })
+function palette:render()
+	self:workOnContext(function()
+		for x = 0, self.grid.width - 1 do
+			for y = 0, self.grid.height - 1 do
+				local color = self.grid:getColor(x, y)
+				love.graphics.setColor(color)
+				love.graphics.points({ x, y })
+			end
 		end
-	end
+	end)
+	screen.render(self)
+end
 
-	love.graphics.pop()
+function palette:onMousePressed(x, y, button)
+	print("palette", x, y)
+	-- clicked on palette
+	if button == 1 then
+		-- left click a cell
+		self:setCursorPos(x, y, "primary")
+	elseif button == 2 then
+		-- right click a cell
+		self:setCursorPos(x, y, "secondary")
+	end
 end
 
 return palette
