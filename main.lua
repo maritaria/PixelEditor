@@ -90,4 +90,15 @@ function love.draw()
         palette:render(paletteRenderPos.x, paletteRenderPos.y)
     end)
     screen:renderToWindow()
+	--Draw grid
+	love.graphics.setBlendMode("alpha")
+	love.graphics.setColor(colors.red)
+	love.graphics.translate(canvasBounds.x + 0.5, canvasBounds.y + 0.5)
+	for x = 0, (canvasBounds.w - 1) * C.pixelSize, 4 * C.pixelSize do
+		love.graphics.line(x, 0, x, canvasBounds.h * C.pixelSize - 1)
+	end
+	for y = 0, (canvasBounds.h - 1) * C.pixelSize, 4 * C.pixelSize do
+		love.graphics.line(0, y, canvasBounds.w * C.pixelSize - 1, y)
+	end
+
 end
