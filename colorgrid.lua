@@ -36,32 +36,4 @@ function colorgrid:getColor(x, y)
 	return self.data[self:getDataPos(x, y)] or colors.transparent
 end
 
---[[
--- https://html-color-codes.info/colors-from-image/
--- http://i.imgur.com/nj9T2aO.png
-colorgrid:addColorHex("#4D1F4D")
-colorgrid:addColorHex("#A63A82")
-colorgrid:addColorHex("#A64B4B")
-colorgrid:addColorHex("#15788C")
-colorgrid:addColorHex("#266EFF")
-colorgrid:addColorHex("#283B73")
-colorgrid:addColorHex("#341F34")
-
-colorgrid:addColorHex("#FFBCA6")
-colorgrid:addColorHex("#FF5983")
-colorgrid:addColorHex("#F37C55")
-colorgrid:addColorHex("#14CC80")
-colorgrid:addColorHex("#00D5FF")
-colorgrid:addColorHex("#8CB2FF")
-colorgrid:addColorHex("#642DB3")
-
-colorgrid:addColorHex("#FFFFFF")
-colorgrid:addColorHex("#FFEECC")
-colorgrid:addColorHex("#FFC34D")
-colorgrid:addColorHex("#CBE545")
-colorgrid:addColorHex("#80FFEA")
-colorgrid:addColorHex("#DAEAF2")
-colorgrid:addColorHex("#6F66CC")
---]]
-
 return colorgrid
