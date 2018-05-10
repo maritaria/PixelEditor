@@ -11,6 +11,7 @@ local palette = require("palette")
 local backgroundColor = colors.darkgrey
 local canvasBounds = { x = 0, y = 0, w = C.screenWidth, h = C.screenHeight - 10 }
 local paletteRenderPos = { x = 0, y = canvasBounds.y + canvasBounds.h + 1 }
+local cursorStart = 30
 
 function love.load()
 	colorgrid:init(7, 7)
@@ -82,9 +83,9 @@ function love.draw()
 		love.graphics.line(0, splitter, C.screenWidth-1, splitter)
 		-- Draw selected colors
 		love.graphics.setColor(palette:getColor("primary"))
-		love.graphics.line(4, splitter, 5, splitter)
+		love.graphics.line(cursorStart, splitter, cursorStart + 1, splitter)
 		love.graphics.setColor(palette:getColor("secondary"))
-		love.graphics.line(7, splitter, 8, splitter)
+		love.graphics.line(cursorStart + 3, splitter, cursorStart + 4, splitter)
 		-- Draw palette
         palette:render(paletteRenderPos.x, paletteRenderPos.y)
     end)
