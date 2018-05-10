@@ -40,6 +40,7 @@ end
 
 function love.mousepressed(x, y, button)
 	palette:mousepressed(x, y, button)
+	canvas:mousepressed(x, y, button)
 end
 
 function love.draw()
