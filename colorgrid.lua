@@ -19,8 +19,8 @@ function colorgrid:convertHexToColor(hex)
 end
 
 function colorgrid:getDataPos(x, y)
-	assert(x > 0 and x <= self.width)
-	assert(y > 0 and y <= self.height)
+	assert(x > 0 and x <= self.width, "x out of range")
+	assert(y > 0 and y <= self.height, "y out of range")
 	return (x + ((y - 1) * self.width))
 end
 
