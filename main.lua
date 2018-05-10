@@ -63,22 +63,26 @@ function love.update(dt)
     x, y = screen:localize(x, y)
     if x >= canvasBounds.x and x - canvasBounds.x < canvasBounds.w and
     y >= canvasBounds.y and y - canvasBounds.y < canvasBounds.h then
+		local color
         if love.mouse.isDown(1) then
-            screen:draw(function(w, h)
-                love.graphics.setBlendMode("replace")
-                love.graphics.setColor(palette:getColor())
-                love.graphics.points({x, y})
-            end)
+			color = palette:getColor("primary")
         elseif love.mouse.isDown(2) then
+			color = palette:getColor("secondary")
+        end
+		if color then
+			-- if drawing with the background, use eraser instead
+			if color == backgroundColor then
+				color = colors.transparent
+			end
             screen:draw(function(w, h)
                 love.graphics.setBlendMode("replace")
-                love.graphics.setColor(colors.transparent)
+                love.graphics.setColor(color)
                 love.graphics.points({x, y})
             end)
-        end
+		end
     end
 	if love.keyboard.isDown("space") then
-		backgroundColor = palette:getColor()
+		backgroundColor = palette:getColor("secondary")
 	end
 end
 
@@ -89,21 +93,37 @@ function love.keypressed(key)
 end
 
 function love.mousepressed(x, y, button)
+	-- turn window pos to pixel pos
 	local x, y = screen:localize(x, y)
 	local sx, sy = paletteRenderPos.x, paletteRenderPos.y
+	-- check if in palette bounds
 	if x >= sx and x - sx < colorgrid.width and
 	y >= sy and y - sy < colorgrid.height then
-		palette:setPos(x - sx, y - sy)
+		-- clicked on palette
+		if button == 1 then
+			-- left click a cell
+			palette:setPos(x - sx, y - sy, "primary")
+		elseif button == 2 then
+			-- right click a cell
+			palette:setPos(x - sx, y - sy, "secondary")
+		end
 	end
 end
 
 function love.draw()
     love.graphics.clear(backgroundColor)
     screen:draw(function(w, h)
+		-- Draw splitter
         love.graphics.setBlendMode("replace")
 		love.graphics.setColor(colors.white)
 		local splitter = canvasBounds.y + canvasBounds.h
-		love.graphics.line(0, splitter, C.screenWidth, splitter)
+		love.graphics.line(0, splitter, C.screenWidth-1, splitter)
+		-- Draw selected colors
+		love.graphics.setColor(palette:getColor("primary"))
+		love.graphics.line(4, splitter, 5, splitter)
+		love.graphics.setColor(palette:getColor("secondary"))
+		love.graphics.line(7, splitter, 8, splitter)
+		-- Draw palette
         palette:render(paletteRenderPos.x, paletteRenderPos.y)
     end)
     screen:renderToWindow()

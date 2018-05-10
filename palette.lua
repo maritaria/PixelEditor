@@ -6,19 +6,25 @@ local colorgrid = require("colorgrid")
 function palette:init(x, y)
 	self.x = 0
 	self.y = 0
+	self.positions = {
+		primary = { x = 0, y = 0 },
+		secondary = { x = 0, y = 1 },
+	}
 end
 
-function palette:setPos(x, y)
-	self.x = x
-	self.y = y
+function palette:setPos(x, y, label)
+	local pos = self.positions[label]
+	pos.x = x
+	pos.y = y
 end
 
-function palette:getPos()
-	return self.x, self.y
+function palette:getPos(label)
+	local pos = self.positions[label]
+	return pos.x, pos.y
 end
 
-function palette:getColor()
-	return colorgrid:getColor(self:getPos())
+function palette:getColor(label)
+	return colorgrid:getColor(self:getPos(label))
 end
 
 function palette:render(x, y)
