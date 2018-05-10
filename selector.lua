@@ -1,26 +1,26 @@
-local selector = {}
+local palette = {}
 
 local colorgrid = require("colorgrid")
 
-function selector:init(x, y)
+function palette:init(x, y)
 	self.x = 1
 	self.y = 1
 end
 
-function selector:setPos(x, y)
+function palette:setPos(x, y)
 	self.x = x
 	self.y = y
 end
 
-function selector:getPos()
+function palette:getPos()
 	return self.x, self.y
 end
 
-function selector:getColor()
+function palette:getColor()
 	return colorgrid:getColor(self:getPos())
 end
 
-function selector:render(x, y)
+function palette:render(x, y)
 	love.graphics.push()
 	love.graphics.translate(x, y)
 
@@ -35,4 +35,4 @@ function selector:render(x, y)
 	love.graphics.pop()
 end
 
-return selector
+return palette
