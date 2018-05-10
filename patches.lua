@@ -10,3 +10,15 @@ function love.graphics.rectangle(mode, x, y, w, h, rx, ry, segments)
         rectangle(mode, x, y, w, h, rx, ry, segments)
     end
 end
+
+local line = love.graphics.line
+function love.graphics.line(x1, y1, x2, y2, ...)
+	if type(x1) == "table" then
+		return line(x1, y1, x2, y2, ...)
+	end
+	if #{...} > 0 then
+		return line(x1, y1, x2, y2, ...)
+	else
+		return line(x1, y1, x2 + 0.1, y2 + 0.1)
+	end
+end
