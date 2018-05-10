@@ -1,7 +1,6 @@
 local selector = {}
 
 local colorgrid = require("colorgrid")
-local colors = require("colors")
 
 function selector:init(x, y)
 	self.x = 1
@@ -27,7 +26,7 @@ function selector:render(x, y)
 
 	for x = 1, colorgrid.width do
 		for y = 1, colorgrid.height do
-			local color = colorgrid:getColor(x, y) or colors.transparent
+			local color = colorgrid:getColor(x, y)
 			love.graphics.setColor(color)
 			love.graphics.points({x, y})
 		end

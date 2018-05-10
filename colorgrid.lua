@@ -1,5 +1,7 @@
 local colorgrid = {}
 
+local colors = require("colors")
+
 function colorgrid:init(width, height)
 	assert(width * height > 0, "size cannot be zero")
 	self.width = width
@@ -31,7 +33,7 @@ function colorgrid:setColor(x, y, color)
 end
 
 function colorgrid:getColor(x, y)
-	return self.data[self:getDataPos(x, y)]
+	return self.data[self:getDataPos(x, y)] or colors.transparent
 end
 
 --[[
