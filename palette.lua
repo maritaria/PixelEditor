@@ -41,4 +41,16 @@ function palette:render()
 	screen.render(self)
 end
 
+function palette:onMousePressed(x, y, button)
+	print("palette", x, y)
+	-- clicked on palette
+	if button == 1 then
+		-- left click a cell
+		self:setCursorPos(x, y, "primary")
+	elseif button == 2 then
+		-- right click a cell
+		self:setCursorPos(x, y, "secondary")
+	end
+end
+
 return palette

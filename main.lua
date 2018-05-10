@@ -61,21 +61,7 @@ function love.keypressed(key)
 end
 
 function love.mousepressed(x, y, button)
-	-- turn window pos to pixel pos
-	local x, y = canvas:localize(x, y)
-	local sx, sy = paletteRenderPos.x, paletteRenderPos.y
-	-- check if in palette bounds
-	if x >= sx and x - sx < colorgrid.width and
-	y >= sy and y - sy < colorgrid.height then
-		-- clicked on palette
-		if button == 1 then
-			-- left click a cell
-			palette:setCursorPos(x - sx, y - sy, "primary")
-		elseif button == 2 then
-			-- right click a cell
-			palette:setCursorPos(x - sx, y - sy, "secondary")
-		end
-	end
+	palette:mousepressed(x, y, button)
 end
 
 function love.draw()
