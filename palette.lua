@@ -4,8 +4,8 @@ local colors = require("colors")
 local colorgrid = require("colorgrid")
 
 function palette:init(x, y)
-	self.x = 1
-	self.y = 1
+	self.x = 0
+	self.y = 0
 end
 
 function palette:setPos(x, y)
@@ -25,11 +25,8 @@ function palette:render(x, y)
 	love.graphics.push()
 	love.graphics.translate(x, y)
 
-	love.graphics.setColor(colors.white)
-	love.graphics.rectangle("line", 0, 0, colorgrid.width + 2, colorgrid.height + 2)
-
-	for x = 1, colorgrid.width do
-		for y = 1, colorgrid.height do
+	for x = 0, colorgrid.width - 1 do
+		for y = 0, colorgrid.height - 1 do
 			local color = colorgrid:getColor(x, y)
 			love.graphics.setColor(color)
 			love.graphics.points({ x, y })
