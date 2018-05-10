@@ -1,11 +1,26 @@
 print(string.format("LOVE %s.%s.%s (%s)", love.getVersion()))
 
+-- Modules
 require("patches")
 local colors = require("colors")
 local screen = require("screen")
+local palette = require("palette")
+local selector = require("selector")
+
+-- Settings
+local backgroundColor = colors.darkgrey
+local selectorRenderPos = { x = 1, y = 21 }
 
 function love.load()
     love.graphics.setNewFont(12)
+	palette:init(5, 5)
+	palette:addColor({1,0,0})
+	palette:addColor({0,1,0})
+	palette:addColor({0,0,1})
+	palette:addColor({1,1,0})
+	palette:addColor({0,1,1})
+	palette:addColor({1,0,1})
+	selector:init()
     screen:init()
     screen:draw(function(w, h)
         love.graphics.setColor(colors.red)
@@ -14,21 +29,6 @@ function love.load()
     assert(love.graphics.getSupported("canvas"))
 end
 
-local palettePos = { 2, 23 }
-local palette = require("palette")
-local paletteIndex = 1
-local function activeColor()
-    local color = palette[paletteIndex]
-    color = { color[1], color[2], color[3] }
-	if love.keyboard.isDown("lshift") then
-		color[1] = color[1] + (1 - color[1]) * 0.2
-		color[2] = color[2] + (1 - color[2]) * 0.2
-		color[3] = color[3] + (1 - color[3]) * 0.2
-	end
-    return color
-end
-
-local backgroundColor = colors.darkgrey
 
 function love.update(dt)
     local shouldDraw = false
@@ -39,7 +39,7 @@ function love.update(dt)
         if love.mouse.isDown(1) then
             screen:draw(function(w, h)
                 love.graphics.setBlendMode("replace")
-                love.graphics.setColor(activeColor())
+                love.graphics.setColor(selector:getColor())
                 love.graphics.points({x, y})
             end)
         elseif love.mouse.isDown(2) then
@@ -51,7 +51,7 @@ function love.update(dt)
         end
     end
 	if love.keyboard.isDown("space") then
-		backgroundColor = activeColor()
+		backgroundColor = selector:getColor()
 	end
 end
 
@@ -61,75 +61,19 @@ function love.keypressed(key)
     end
 end
 
-function love.wheelmoved(x, y)
-    if y > 0 then
-        --Scrolled up
-        if love.keyboard.isDown("lshift") then
-            paletteIndex = paletteIndex - 7
-        else
-            paletteIndex = paletteIndex - 1
-        end
-    elseif y < 0 then
-        --Scrolled down
-        if love.keyboard.isDown("lshift") then
-            paletteIndex = paletteIndex + 7
-        else
-            paletteIndex = paletteIndex + 1
-        end
-    end
-    while paletteIndex < 1 do
-        paletteIndex = paletteIndex + #palette
-    end
-    while paletteIndex > #palette do
-        paletteIndex = paletteIndex - #palette
-    end
+function love.mousepressed(x, y, button)
+	local x, y = screen:localize(x, y)
+	local sx, sy = selectorRenderPos.x, selectorRenderPos.y
+	if x > sx and x <= sx + palette.width and y > sy and y <= sy + palette.height then
+		selector:setPos(x - sx, y - sy)
+	end
 end
 
-function love.filedropped( file )
-    print("file dropped: " .. file:getFilename())
-end
 function love.draw()
     love.graphics.clear(backgroundColor)
     screen:draw(function(w, h)
         love.graphics.setBlendMode("replace")
-        love.graphics.setColor(activeColor())
-        love.graphics.points(palettePos[1] - 1, palettePos[2])
-        love.graphics.setColor(colors.transparent)
-        love.graphics.line(
-            palettePos[1] + 1, palettePos[2] - 1,
-            palettePos[1] + 1, palettePos[2] + 2
-        )
-        love.graphics.line(
-            palettePos[1] + 2, palettePos[2] - 1,
-            palettePos[1] + 9, palettePos[2] - 1
-        )
-        love.graphics.line(
-            palettePos[1] + 9, palettePos[2] - 1,
-            palettePos[1] + 9, palettePos[2] + 2
-        )
-        love.graphics.line(
-            palettePos[1] + 2, palettePos[2] + 3,
-            palettePos[1] + 9, palettePos[2] + 3
-        )
-        local pos = { palettePos[1] + 2, palettePos[2]}
-        for i = 1, #palette do
-            love.graphics.setColor(palette[i])
-            love.graphics.points(pos)
-            if i == paletteIndex then
-                love.graphics.setColor(colors.white)
-                love.graphics.points(palettePos[1] + 1, pos[2])
-                love.graphics.points(palettePos[1] + 9, pos[2])
-                love.graphics.points(pos[1], palettePos[2] - 1)
-                love.graphics.points(pos[1], palettePos[2] + 3)
-            end
-            --Find next pos
-            pos[1] = pos[1] + 1
-            if pos[1] > palettePos[1] + 8 then
-                pos[1] = palettePos[1] + 2
-                pos[2] = pos[2] + 1
-            end
-        end
-
+        selector:render(selectorRenderPos.x, selectorRenderPos.y)
     end)
     screen:renderToWindow()
 end
