@@ -62,13 +62,12 @@ function screen:globalize(x, y)
 	return (x + self.position.x) * C.pixelSize, (y + self.position.y) * C.pixelSize
 end
 
--- Tests if the global coordinate x, y is inside the screen
 function screen:isInside(x, y)
-	local x, y = self:localize(x, y)
 	return x >= 0 and x < self.width and y >= 0 and y < self.height
 end
 
 function screen:mousepressed(x, y, button)
+	local x, y = self:localize(x, y)
 	if self:isInside(x, y) then
 		self:onMousePressed(x, y, button)
 	end
@@ -77,6 +76,7 @@ end
 function screen:onMousePressed(x, y, button) end
 
 function screen:mousemoved(x, y, dx, dy)
+	local x, y = self:localize(x, y)
 	if self:isInside(x, y) then
 		self:onMouseMoved(x, y, button)
 	end
@@ -85,6 +85,7 @@ end
 function screen:onMouseMoved(x, y, button) end
 
 function screen:mousereleased(x, y, button)
+	local x, y = self:localize(x, y)
 	if self:isInside(x, y) then
 		self:onMouseReleased(x, y, button)
 	end
