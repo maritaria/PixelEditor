@@ -9,7 +9,7 @@ local palette = require("palette")
 
 -- Settings
 local backgroundColor = colors.darkgrey
-local paletteRenderPos = { x = 1, y = 21 }
+local paletteRenderPos = { x = 1, y = 22 }
 
 function love.load()
     love.graphics.setNewFont(12)
@@ -63,7 +63,7 @@ end
 function love.mousepressed(x, y, button)
 	local x, y = screen:localize(x, y)
 	local sx, sy = paletteRenderPos.x, paletteRenderPos.y
-	if x > sx and x <= sx + colorgrid.width and y > sy and y <= sy + colorgrid.height then
+	if x >= sx and x < sx + colorgrid.width and y >= sy and y < sy + colorgrid.height then
 		palette:setPos(x - sx, y - sy)
 	end
 end
