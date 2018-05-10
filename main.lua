@@ -21,7 +21,8 @@ function love.load()
 	colorgrid:init(7, 7)
     canvas:init(C.screenWidth, C.screenHeight, C.pixelSize)
 	require("palettes.basic_rainbow")
-	palette:init(paletteRenderPos.x, paletteRenderPos.y)
+	palette:init(colorgrid)
+	palette:setPos(paletteRenderPos.x, paletteRenderPos.y)
 end
 
 function love.update(dt)
@@ -44,7 +45,6 @@ function love.update(dt)
             canvas:workOnContext(function(w, h)
                 love.graphics.setBlendMode("replace")
                 love.graphics.setColor(color)
-				print(x, y)
                 love.graphics.points({x, y})
             end)
 		end
@@ -70,10 +70,10 @@ function love.mousepressed(x, y, button)
 		-- clicked on palette
 		if button == 1 then
 			-- left click a cell
-			palette:setPos(x - sx, y - sy, "primary")
+			palette:setCursorPos(x - sx, y - sy, "primary")
 		elseif button == 2 then
 			-- right click a cell
-			palette:setPos(x - sx, y - sy, "secondary")
+			palette:setCursorPos(x - sx, y - sy, "secondary")
 		end
 	end
 end
