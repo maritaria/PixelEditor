@@ -1,5 +1,6 @@
 local palette = {}
 
+local screen = require("screen")
 local colors = require("colors")
 local colorgrid = require("colorgrid")
 
@@ -10,6 +11,9 @@ function palette:init(x, y)
 		primary = { x = 0, y = 0 },
 		secondary = { x = 0, y = 1 },
 	}
+	self.grid = colorgrid
+	self.screen = screen:create(self.grid.width, self.grid.height, C.pixelSize)
+	self.screen:setPos(x, y)
 end
 
 function palette:setPos(x, y, label)
@@ -24,22 +28,25 @@ function palette:getPos(label)
 end
 
 function palette:getColor(label)
-	return colorgrid:getColor(self:getPos(label))
+	return self.grid:getColor(self:getPos(label))
 end
 
-function palette:render(x, y)
-	love.graphics.push()
-	love.graphics.translate(x, y)
-
-	for x = 0, colorgrid.width - 1 do
-		for y = 0, colorgrid.height - 1 do
-			local color = colorgrid:getColor(x, y)
-			love.graphics.setColor(color)
-			love.graphics.points({ x, y })
+function palette:render()
+	self.screen:workOnContext(function()
+		for x = 0, self.grid.width - 1 do
+			for y = 0, self.grid.height - 1 do
+				local color = self.grid:getColor(x, y)
+				love.graphics.setColor(color)
+				love.graphics.points({ x, y })
+			end
 		end
-	end
+	end)
+	self.screen:render()
+end
 
-	love.graphics.pop()
+function palette:mousepressed(x, y, button)
+	local x, y = self.screen:localize(x, y)
+
 end
 
 return palette

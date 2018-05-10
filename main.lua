@@ -13,17 +13,21 @@ local canvasBounds = { x = 0, y = 0, w = C.screenWidth, h = C.screenHeight - 10 
 local paletteRenderPos = { x = 0, y = canvasBounds.y + canvasBounds.h + 1 }
 local cursorStart = 30
 
+local canvas = screen:createClass()
+
 function love.load()
+	love.graphics.setLineWidth(1)
+	love.graphics.setLineStyle("rough")
 	colorgrid:init(7, 7)
-	palette:init()
-    screen:init(C.screenWidth, C.screenHeight)
+    canvas:init(C.screenWidth, C.screenHeight, C.pixelSize)
 	require("palettes.basic_rainbow")
+	palette:init(paletteRenderPos.x, paletteRenderPos.y)
 end
 
 function love.update(dt)
     local shouldDraw = false
     local x, y = love.mouse.getPosition()
-    x, y = screen:localize(x, y)
+    x, y = canvas:localize(x, y)
     if x >= canvasBounds.x and x - canvasBounds.x < canvasBounds.w and
     y >= canvasBounds.y and y - canvasBounds.y < canvasBounds.h then
 		local color
@@ -37,9 +41,10 @@ function love.update(dt)
 			if color == backgroundColor then
 				color = colors.transparent
 			end
-            screen:draw(function(w, h)
+            canvas:workOnContext(function(w, h)
                 love.graphics.setBlendMode("replace")
                 love.graphics.setColor(color)
+				print(x, y)
                 love.graphics.points({x, y})
             end)
 		end
@@ -57,7 +62,7 @@ end
 
 function love.mousepressed(x, y, button)
 	-- turn window pos to pixel pos
-	local x, y = screen:localize(x, y)
+	local x, y = canvas:localize(x, y)
 	local sx, sy = paletteRenderPos.x, paletteRenderPos.y
 	-- check if in palette bounds
 	if x >= sx and x - sx < colorgrid.width and
@@ -75,7 +80,7 @@ end
 
 function love.draw()
     love.graphics.clear(backgroundColor)
-    screen:draw(function(w, h)
+    canvas:workOnContext(function()
 		-- Draw splitter
         love.graphics.setBlendMode("replace")
 		love.graphics.setColor(colors.white)
@@ -86,10 +91,9 @@ function love.draw()
 		love.graphics.line(cursorStart, splitter, cursorStart + 1, splitter)
 		love.graphics.setColor(palette:getColor("secondary"))
 		love.graphics.line(cursorStart + 3, splitter, cursorStart + 4, splitter)
-		-- Draw palette
-        palette:render(paletteRenderPos.x, paletteRenderPos.y)
     end)
-    screen:renderToWindow()
+    canvas:render()
+	palette:render()
 	--Draw grid
 	love.graphics.setBlendMode("alpha")
 	love.graphics.setColor(colors.red)
