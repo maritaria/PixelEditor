@@ -2,6 +2,7 @@ C = {}
 C.pixelSize = 12
 C.screenWidth = 80
 C.screenHeight = 60
+C.canvasHeight = C.screenHeight - 10
 
 function love.conf(t)
     t.identity = "TinyScreen"

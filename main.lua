@@ -5,7 +5,9 @@ require("patches")
 local colors = require("colors")
 local screen = require("screen")
 local colorgrid = require("colorgrid")
+local canvas = require("canvas")
 local palette = require("palette")
+local splitter = require("splitter")
 
 -- Settings
 local backgroundColor = colors.darkgrey
@@ -13,41 +15,18 @@ local canvasBounds = { x = 0, y = 0, w = C.screenWidth, h = C.screenHeight - 10 
 local paletteRenderPos = { x = 0, y = canvasBounds.y + canvasBounds.h + 1 }
 local cursorStart = 30
 
-local canvas = screen:createClass()
-
 function love.load()
 	love.graphics.setLineWidth(1)
 	love.graphics.setLineStyle("rough")
 	colorgrid:init(7, 7)
-    canvas:init(C.screenWidth, C.screenHeight, C.pixelSize)
 	require("palettes.basic_rainbow")
 	palette:init(colorgrid)
-	palette:setPos(paletteRenderPos.x, paletteRenderPos.y)
+    canvas:init(palette)
+	splitter:init(palette)
 end
 
 function love.update(dt)
-    local x, y = love.mouse.getPosition()
-    x, y = canvas:localize(x, y)
-    if x >= canvasBounds.x and x - canvasBounds.x < canvasBounds.w and
-    y >= canvasBounds.y and y - canvasBounds.y < canvasBounds.h then
-		local color
-        if love.mouse.isDown(1) then
-			color = palette:getColor("primary")
-        elseif love.mouse.isDown(2) then
-			color = palette:getColor("secondary")
-        end
-		if color then
-			-- if drawing with the background, use eraser instead
-			if color == backgroundColor then
-				color = colors.transparent
-			end
-            canvas:workOnContext(function(w, h)
-                love.graphics.setBlendMode("replace")
-                love.graphics.setColor(color)
-                love.graphics.points({x, y})
-            end)
-		end
-    end
+    canvas:update()
 	if love.keyboard.isDown("space") then
 		backgroundColor = palette:getColor("secondary")
 	end
@@ -65,20 +44,10 @@ end
 
 function love.draw()
     love.graphics.clear(backgroundColor)
-    canvas:workOnContext(function()
-		-- Draw splitter
-        love.graphics.setBlendMode("replace")
-		love.graphics.setColor(colors.white)
-		local splitter = canvasBounds.y + canvasBounds.h
-		love.graphics.line(0, splitter, C.screenWidth-1, splitter)
-		-- Draw selected colors
-		love.graphics.setColor(palette:getColor("primary"))
-		love.graphics.line(cursorStart, splitter, cursorStart + 1, splitter)
-		love.graphics.setColor(palette:getColor("secondary"))
-		love.graphics.line(cursorStart + 3, splitter, cursorStart + 4, splitter)
-    end)
     canvas:render()
 	palette:render()
+	--Splitter
+	splitter:render()
 	--Draw grid
 	love.graphics.setBlendMode("alpha")
 	love.graphics.setColor(colors.red)

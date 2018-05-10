@@ -6,6 +6,7 @@ local palette = screen:createClass()
 
 function palette:init(colorgrid)
 	screen.init(self, colorgrid.width, colorgrid.height)
+	self:setPos(0, C.canvasHeight + 1)
 	self.grid = colorgrid
 	self.cursors = {
 		primary = { x = 0, y = 0 },
