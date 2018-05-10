@@ -20,10 +20,6 @@ function canvas:update()
 	if self:isInside(x, y) then
 		local color = self:getMouseActivatedColor()
 		if color then
-			-- if drawing with the background, use eraser instead
-			if color == backgroundColor then
-				color = colors.transparent
-			end
 			canvas:workOnContext(function(w, h)
 				love.graphics.setBlendMode("replace")
 				love.graphics.setColor(color)
