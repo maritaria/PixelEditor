@@ -4,7 +4,7 @@ print(string.format("LOVE %s.%s.%s (%s)", love.getVersion()))
 require("patches")
 local colors = require("colors")
 local screen = require("screen")
-local palette = require("palette")
+local colorgrid = require("colorgrid")
 local selector = require("selector")
 
 -- Settings
@@ -13,13 +13,13 @@ local selectorRenderPos = { x = 1, y = 21 }
 
 function love.load()
     love.graphics.setNewFont(12)
-	palette:init(5, 5)
-	palette:addColor({1,0,0})
-	palette:addColor({0,1,0})
-	palette:addColor({0,0,1})
-	palette:addColor({1,1,0})
-	palette:addColor({0,1,1})
-	palette:addColor({1,0,1})
+	colorgrid:init(5, 5)
+	colorgrid:addColor({1,0,0})
+	colorgrid:addColor({0,1,0})
+	colorgrid:addColor({0,0,1})
+	colorgrid:addColor({1,1,0})
+	colorgrid:addColor({0,1,1})
+	colorgrid:addColor({1,0,1})
 	selector:init()
     screen:init()
     screen:draw(function(w, h)
@@ -28,7 +28,6 @@ function love.load()
     end)
     assert(love.graphics.getSupported("canvas"))
 end
-
 
 function love.update(dt)
     local shouldDraw = false
@@ -64,7 +63,7 @@ end
 function love.mousepressed(x, y, button)
 	local x, y = screen:localize(x, y)
 	local sx, sy = selectorRenderPos.x, selectorRenderPos.y
-	if x > sx and x <= sx + palette.width and y > sy and y <= sy + palette.height then
+	if x > sx and x <= sx + colorgrid.width and y > sy and y <= sy + colorgrid.height then
 		selector:setPos(x - sx, y - sy)
 	end
 end

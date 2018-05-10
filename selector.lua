@@ -1,6 +1,6 @@
 local selector = {}
 
-local palette = require("palette")
+local colorgrid = require("colorgrid")
 local colors = require("colors")
 
 function selector:init(x, y)
@@ -18,16 +18,16 @@ function selector:getPos()
 end
 
 function selector:getColor()
-	return palette:getColor(self:getPos())
+	return colorgrid:getColor(self:getPos())
 end
 
 function selector:render(x, y)
 	love.graphics.push()
 	love.graphics.translate(x, y)
 
-	for x = 1, palette.width do
-		for y = 1, palette.height do
-			local color = palette:getColor(x, y) or colors.transparent
+	for x = 1, colorgrid.width do
+		for y = 1, colorgrid.height do
+			local color = colorgrid:getColor(x, y) or colors.transparent
 			love.graphics.setColor(color)
 			love.graphics.points({x, y})
 		end
