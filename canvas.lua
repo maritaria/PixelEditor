@@ -8,17 +8,17 @@ end
 
 function canvas:getMouseActivatedColor()
 	if love.mouse.isDown(1) then
-		return self.palette:getColor("primary")
+		return self.palette:getPaintingColor("primary")
 	elseif love.mouse.isDown(2) then
-		return self.palette:getColor("secondary")
+		return self.palette:getPaintingColor("secondary")
 	end
 end
 
 function canvas:getMouseButtonColor(button)
 	if button == 1 then
-		return self.palette:getColor("primary")
+		return self.palette:getPaintingColor("primary")
 	elseif button == 2 then
-		return self.palette:getColor("secondary")
+		return self.palette:getPaintingColor("secondary")
 	end
 end
 

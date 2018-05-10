@@ -11,10 +11,12 @@ function palette:init(colorgrid)
 	self.cursors = {
 		primary = { x = 0, y = 0 },
 		secondary = { x = 0, y = 1 },
+		background = { x = 0, y = 1 },
+		grid = { x = 1, y = 0 },
 	}
 end
 
-function palette:setCursorPos(x, y, label)
+function palette:setCursorPos(label, x, y)
 	local pos = self.cursors[label]
 	pos.x = x
 	pos.y = y
@@ -27,6 +29,19 @@ end
 
 function palette:getColor(label)
 	return self.grid:getColor(self:getCursorPos(label))
+end
+
+function palette:getPaintingColor(label)
+	if label == "background" then
+		return colors.transparent
+	end
+	if label == "secondary" then
+		if self.cursors.secondary.x == self.cursors.background.x and
+			self.cursors.secondary.y == self.cursors.background.y then
+			return colors.transparent
+		end
+	end
+	return self:getColor(label)
 end
 
 function palette:render()
@@ -43,14 +58,15 @@ function palette:render()
 end
 
 function palette:onMousePressed(x, y, button)
-	print("palette", x, y)
-	-- clicked on palette
 	if button == 1 then
-		-- left click a cell
-		self:setCursorPos(x, y, "primary")
+		-- Left click a cell
+		self:setCursorPos("primary", x, y)
 	elseif button == 2 then
-		-- right click a cell
-		self:setCursorPos(x, y, "secondary")
+		-- Right click a cell
+		self:setCursorPos("secondary", x, y)
+	elseif button == 3 then
+		-- Mouse wheel click
+		self:setCursorPos("grid", x, y)
 	end
 end
 
