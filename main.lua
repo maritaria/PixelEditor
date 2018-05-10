@@ -13,16 +13,10 @@ local canvasBounds = { x = 0, y = 0, w = C.screenWidth, h = C.screenHeight - 10 
 local paletteRenderPos = { x = 0, y = canvasBounds.y + canvasBounds.h + 1 }
 
 function love.load()
-    love.graphics.setNewFont(12)
 	colorgrid:init(7, 7)
-	require("palettes.basic_rainbow")
 	palette:init()
     screen:init()
-    screen:draw(function(w, h)
-        love.graphics.setColor(colors.red)
-        love.graphics.rectangle("line", canvasBounds.x, canvasBounds.y, canvasBounds.w, canvasBounds.h)
-    end)
-    assert(love.graphics.getSupported("canvas"))
+	require("palettes.basic_rainbow")
 end
 
 function love.update(dt)
