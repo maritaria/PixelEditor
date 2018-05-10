@@ -5,11 +5,11 @@ require("patches")
 local colors = require("colors")
 local screen = require("screen")
 local colorgrid = require("colorgrid")
-local selector = require("selector")
+local palette = require("palette")
 
 -- Settings
 local backgroundColor = colors.darkgrey
-local selectorRenderPos = { x = 1, y = 21 }
+local paletteRenderPos = { x = 1, y = 21 }
 
 function love.load()
     love.graphics.setNewFont(12)
@@ -20,7 +20,7 @@ function love.load()
 	colorgrid:addColor({1,1,0})
 	colorgrid:addColor({0,1,1})
 	colorgrid:addColor({1,0,1})
-	selector:init()
+	palette:init()
     screen:init()
     screen:draw(function(w, h)
         love.graphics.setColor(colors.red)
@@ -38,7 +38,7 @@ function love.update(dt)
         if love.mouse.isDown(1) then
             screen:draw(function(w, h)
                 love.graphics.setBlendMode("replace")
-                love.graphics.setColor(selector:getColor())
+                love.graphics.setColor(palette:getColor())
                 love.graphics.points({x, y})
             end)
         elseif love.mouse.isDown(2) then
@@ -50,7 +50,7 @@ function love.update(dt)
         end
     end
 	if love.keyboard.isDown("space") then
-		backgroundColor = selector:getColor()
+		backgroundColor = palette:getColor()
 	end
 end
 
@@ -62,9 +62,9 @@ end
 
 function love.mousepressed(x, y, button)
 	local x, y = screen:localize(x, y)
-	local sx, sy = selectorRenderPos.x, selectorRenderPos.y
+	local sx, sy = paletteRenderPos.x, paletteRenderPos.y
 	if x > sx and x <= sx + colorgrid.width and y > sy and y <= sy + colorgrid.height then
-		selector:setPos(x - sx, y - sy)
+		palette:setPos(x - sx, y - sy)
 	end
 end
 
@@ -72,7 +72,7 @@ function love.draw()
     love.graphics.clear(backgroundColor)
     screen:draw(function(w, h)
         love.graphics.setBlendMode("replace")
-        selector:render(selectorRenderPos.x, selectorRenderPos.y)
+        palette:render(paletteRenderPos.x, paletteRenderPos.y)
     end)
     screen:renderToWindow()
 end
