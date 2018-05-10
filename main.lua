@@ -26,7 +26,6 @@ function love.load()
 end
 
 function love.update(dt)
-    local shouldDraw = false
     local x, y = love.mouse.getPosition()
     x, y = canvas:localize(x, y)
     if x >= canvasBounds.x and x - canvasBounds.x < canvasBounds.w and
