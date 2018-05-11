@@ -7,7 +7,7 @@ C.canvasHeight = C.screenHeight - 10
 function love.conf(t)
     t.identity = "TinyScreen"
     t.version = "11.0"
-    t.console = true
+    t.console = false
 
     t.window.resizable = false
     t.window.width = C.pixelSize * C.screenWidth
